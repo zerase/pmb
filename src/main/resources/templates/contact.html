@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>PMB - Contactpage</title>
+</head>
+<body>
+
+<header>
+	<!-- Navigation / Menu -->
+	<nav>
+		<!-- Logo PMB -->
+		<div style="display:inline-block;"><button>Pay My Buddy</button></div>
+		
+		<!-- Links -->
+		<ul style="display:inline-block; text-align:right;">
+			<li style="display:inline;"><a th:href="@{/home}">Home</a></li>
+			<li style="display:inline;"><a th:href="@{/transfer}">Transfer</a></li>
+			<li style="display:inline;"><a href="profile">Profile</a></li>
+			<li style="display:inline;"><a th:href="@{/contact}">Contact</a></li>
+			<li style="display:inline-block;">
+				<form action="@{/logout}" method="post">
+					<input type="submit" value="Log off" />
+				</form>
+			</li>
+		</ul>
+	</nav>
+	
+	<!-- Fil d'Ariane -->
+	<nav style="background-color:lightgrey; padding:2px;">
+		<p><a th:href="@{/home}">Home</a> / Contact</p>
+	</nav>
+</header>
+
+
+
+<!-- Main content -->
+<main style="width: 800px; margin:0 auto;">
+	<section>
+		<!-- <h2><a th:href="@{/contact/addconnection}">Ajouter un nouveau contact</a></h2> -->
+		
+		<h2>My connections</h2>
+		
+		<div>
+			<form th:action="@{/contact}" method="POST">
+			<input type="hidden" name="user" id="user">
+		
+			<label for="email">Type the email address of the contact you wish to add to your list : </label>
+			<input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" placeholder="username@domain.com" required>
+			
+			<input type="submit" value="Add contact" />
+			</form>
+		</div>	
+		<p th:if="${param.successAddConnection}" style="border:2px solid green; color:green; text-align:center;">Connection added successfully !</p>
+		<p th:if="${param.errorAddConnection}"   style="border:2px solid red;   color:red;   text-align:center;">No email found !</p>	
+		<hr>
+		
+		<div>
+		<table>
+			<tr>
+				<th>Connection</th>
+				<th>Mail</th>
+			</tr>
+	
+			<tr th:each="connection : ${userconnections}">
+				<td><span th:text="${connection.firstName}">Prénom</span> <span th:text="${connection.lastName}">Nom</span></td>
+				<td><span th:text="${connection.email}">Email</span></td>
+			</tr>
+		</table>
+		</div>
+	</section>
+</main>
+
+</body>
+</html>
