@@ -40,26 +40,25 @@
 	
 	<h2>My transactions</h2>
 	<section id="transaction" style="padding:15px; background-color:lightgrey;">
-		<form action="@{/transaction}" method="POST">
+		<form th:action="@{/transfer}" method="POST">
         	<input type="hidden" name="userAccount" id="user-account">
                  
             <label for="receiverEmail">Payment to : </label>
-            <select id="receiverEmail" name="receiverEmail" required>
+            <select id="receiverEmail" name="connections" required>
             	<option value="" selected disabled hidden>Select a connection</option>
-                <option>Email</option>
+                <option th:each="u :  ${u.friends}" th:value="${u.email}" th:text="${u.email}">Email</option>
             </select>
 
             <label for="amount">Amount(€): </label>
-            <input type="number" min="1" value="0" step=".01" name="amount" required>
+            <input type="number" min="1" step=".01" name="amount" required>
    
             <label for="description">Description: </label>
             <input type="text" name="description" id="description">
  
-            <label for="transfer"></label>
-            <button type="submit" name="transfer" value="Transfer">Pay</button>
+            <input type="submit" value="Pay">
        </form>
-       <p th:if="${error != null}" th:text="${error}" style="border:2px solid red; padding:15px;">Operation succeed</p>
-	   <p th:if="${success != null}" th:text="${success}" style="border:2px solid green; padding:15px;">Operation failed</p>
+       <p th:if="${param.successTransfer}" style="border:2px solid green; color:green;">Operation succeed</p>
+	   <p th:if="${param.errorTransfer}"   style="border:2px solid red;   color:red;">Operation failed</p>
     </section>
     <hr>
 	
@@ -69,11 +68,13 @@
         		<th>Connection</th>
                 <th>Description</th>
                 <th>Amount (€)</th>
+                <th>Type de transaction</th>
             </tr>
             <tr th:each="transaction : ${usertransactions}">
             	<td th:text="${transaction.receiverId.firstName + ' ' + transaction.receiverId.lastName}">Sherlock Holmes</td>
                 <td th:text="${transaction.description}">Tickets de cinéma</td>
                 <td th:text="${transaction.amount}">14.51</td>
+                <td th:text="${transaction.type}">type de transaction</td>
             </tr>
         </table>
 	</section>

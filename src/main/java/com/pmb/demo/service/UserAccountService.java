@@ -1,5 +1,7 @@
 package com.pmb.demo.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -74,8 +76,8 @@ public class UserAccountService {
 		UserAccount friend = getUserByEmail(friendEmail);
 
 		Connection friendshipToAdd = new Connection();
-		friendshipToAdd.setUserAccountId(user.getUserId());
-		friendshipToAdd.setUserFriendId(friend.getUserId());
+		friendshipToAdd.setUserAccountId(user);
+		friendshipToAdd.setUserFriendId(friend);
 
 		return connectionRepository.save(friendshipToAdd);
 	}
@@ -83,14 +85,30 @@ public class UserAccountService {
 	
 	
 	// TODO : This method should credit the connection (friend) with the amount of the transaction
-	/*public UserAccount credit(UserAccount user, BigDecimal amount) {
-		return null;
-	}*/
+	/**
+	 * Credit the balance of an user
+	 * @param user The user to credit
+	 * @param amount The amount to credit
+	 * @return
+	 */
+	public UserAccount credit(UserAccount user, BigDecimal amount) {
+		BigDecimal userbalance = user.getBalance().setScale(2, RoundingMode.HALF_UP);
+		user.setBalance(userbalance.add(amount));
+		return userAccountRepository.save(user);
+	}
 	
 	// TODO: This method should debit the current user with the amount of the transaction
-	/*public UserAccount debit(UserAccount user, BigDecimal amount) {
-		return null;
-	}*/
+	/**
+	 * Debit the balance of an user
+	 * @param user The user to debit
+	 * @param amount The amount to debit
+	 * @return
+	 */
+	public UserAccount debit(UserAccount user, BigDecimal amount) {
+		BigDecimal userbalance = user.getBalance().setScale(2, RoundingMode.HALF_UP);
+		user.setBalance(userbalance.subtract(amount));
+		return userAccountRepository.save(user);
+	}
 	
 	// TODO : Add a new user to db with a register form
 	/*public UserAccount addNewUser() {

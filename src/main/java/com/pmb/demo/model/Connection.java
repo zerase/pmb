@@ -9,38 +9,40 @@ public class Connection {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "connection_id")
-	private Long id;
+	private Long ConnectionId;
 	
-	@Column(name = "user_account_id")
-	private Long userAccountId;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserAccount userAccountId;
 	
-	@Column(name = "user_friend_id")
-	private Long userFriendId;
+	@ManyToOne
+	@JoinColumn(name = "friend_id")
+	private UserAccount userFriendId;
 
 	
 	/* Getters and setters */
 	
-	public Long getId() {
-		return id;
+	public Long getConnectionId() {
+		return ConnectionId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setConnectionId(Long connectionId) {
+		ConnectionId = connectionId;
 	}
 
-	public Long getUserAccountId() {
+	public UserAccount getUserAccountId() {
 		return userAccountId;
 	}
 
-	public void setUserAccountId(Long userAccountId) {
+	public void setUserAccountId(UserAccount userAccountId) {
 		this.userAccountId = userAccountId;
 	}
 
-	public Long getUserFriendId() {
+	public UserAccount getUserFriendId() {
 		return userFriendId;
 	}
 
-	public void setUserFriendId(Long userFriendId) {
+	public void setUserFriendId(UserAccount userFriendId) {
 		this.userFriendId = userFriendId;
 	}
 	

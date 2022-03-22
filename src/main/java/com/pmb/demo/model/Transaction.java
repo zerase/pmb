@@ -21,17 +21,17 @@ public class Transaction {
 	
 	private String description;
 	
-	private BigDecimal charges;
+	private Double charges;
 	
 	@Enumerated(EnumType.STRING)
 	private TransactionType type;
 
 	@ManyToOne
-	@JoinColumn(name = "account_sender_id"/*, referencedColumnName = "user_account_id"*/)
+	@JoinColumn(name = "account_sender_id")
 	private UserAccount senderId;
 	
 	@ManyToOne
-	@JoinColumn(name = "account_receiver_id"/*, referencedColumnName = "user_account_id"*/)
+	@JoinColumn(name = "account_receiver_id")
 	private UserAccount receiverId;
 
 	
@@ -61,11 +61,11 @@ public class Transaction {
 		this.description = description;
 	}
 
-	public BigDecimal getCharges() {
+	public Double getCharges() {
 		return charges;
 	}
 
-	public void setCharges(BigDecimal charges) {
+	public void setCharges(Double charges) {
 		this.charges = charges;
 	}
 

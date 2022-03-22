@@ -36,9 +36,9 @@ public class UserAccount {
 	@JoinTable(
 			name = "connection",
 		   	joinColumns = @JoinColumn(
-		   			name = "user_account_id", referencedColumnName = "user_account_id"),
+		   			name = "user_id", referencedColumnName = "user_account_id"),
 		   	inverseJoinColumns = @JoinColumn(
-		   			name = "user_friend_id", referencedColumnName = "user_account_id"))
+		   			name = "friend_id", referencedColumnName = "user_account_id"))
 	private Set<UserAccount> friends;
 
 	

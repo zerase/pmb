@@ -13,8 +13,8 @@ create table bank_account (
 
 create table connection (
 	connection_id bigint not null auto_increment, 
-    user_account_id bigint not null, 
-    user_friend_id bigint not null, 
+    user_id bigint not null, 
+    friend_id bigint not null, 
     primary key (connection_id)
 ) engine=InnoDB default charset utf8mb4 collate utf8mb4_unicode_ci;
 
@@ -44,6 +44,14 @@ create table user_account (
 
 
 
+alter table connection add constraint FKd3nihp56qqxyidykyvlruv1yf 
+	foreign key (friend_id) references user_account (user_account_id);
+    
+alter table connection add constraint FKr59jg6yg64eicd8t5in2qtxu2 
+	foreign key (user_id) references user_account (user_account_id);
+
+
+
 INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_name`, `password`, `bank_account_id`) VALUES ('147.89', 'john@test.com', 'John', 'Doe', 'test123', '1');
 INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_name`, `password`, `bank_account_id`) VALUES ('3000', 'picsou@test.com', 'Balthazar', 'Picsou', 'test123', '2');
 INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_name`, `password`, `bank_account_id`) VALUES ('100', 'donald@test.com', 'Donald', 'Duck', 'test123', '3');
@@ -52,10 +60,10 @@ INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_n
 INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_name`, `password`, `bank_account_id`) VALUES ('0', 'tex@test.com', 'Tex', 'Avery', 'test123', '6');
 INSERT INTO `pmb5_dev`.`user_account` (`balance`, `email`, `first_name`, `last_name`, `password`, `bank_account_id`) VALUES ('50', 'pat@test.com', 'Pat', 'Hibulaire', 'test123', '7');
 
-INSERT INTO `pmb5_dev`.`connection` (`user_account_id`, `user_friend_id`) VALUES ('1', '2');
-INSERT INTO `pmb5_dev`.`connection` (`user_account_id`, `user_friend_id`) VALUES ('1', '3');
-INSERT INTO `pmb5_dev`.`connection` (`user_account_id`, `user_friend_id`) VALUES ('1', '4');
-INSERT INTO `pmb5_dev`.`connection` (`user_account_id`, `user_friend_id`) VALUES ('6', '5');
+INSERT INTO `pmb5_dev`.`connection` (`user_id`, `friend_id`) VALUES ('1', '2');
+INSERT INTO `pmb5_dev`.`connection` (`user_id`, `friend_id`) VALUES ('1', '3');
+INSERT INTO `pmb5_dev`.`connection` (`user_id`, `friend_id`) VALUES ('1', '4');
+INSERT INTO `pmb5_dev`.`connection` (`user_id`, `friend_id`) VALUES ('6', '5');
 
 INSERT INTO `pmb5_dev`.`transaction` (`amount`, `charges`, `description`, `type`, `account_receiver_id`, `account_sender_id`) VALUES ('1000', '0.5', 'Mon premier versement sur l\'appli', 'BANK_TO_USER', '1', '1');
 INSERT INTO `pmb5_dev`.`transaction` (`amount`, `charges`, `description`, `type`, `account_receiver_id`, `account_sender_id`) VALUES ('80', '0.5', 'Loyer jan', 'USER_TO_USER', '2', '1');
