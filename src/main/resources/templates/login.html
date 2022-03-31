@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Pmb - Loginpage</title>
+
+<style>
+body {background-color:#eee; text-align:center;}
+h1{margin:0;}
+.container{background-color:#fff; max-width:500px; margin:0 auto; padding:30px;}
+.form-row{padding:5px 0; display:flex;}
+.form-row label{padding-right:5px;}
+.form-row input{flex:1;}
+.info{color:#0f7aab;}
+.error{color:red;}
+.success{color:green;}
+</style>
+
+</head>
+<body>
+
+<main class="container">
+	<h1>Login</h1>
+	<!-- If an error occurs -->
+	<div class="error" th:if="${param.error}">Sorry, but failed to login :-(</div>
+		
+	<!-- If user logout -->
+	<div class="info" th:if="${param.logout}">You have been logged out successfully :-)</div>
+	
+	<form action="perform_login" method="post">		
+		<div class="form-row">
+			<label for="email">Email : </label>
+			<input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="custom-username" required="required">
+		</div>
+
+		<div class="form-row">
+			<label for="password">Password : </label>
+			<input type="password" id="password" name="custom-password" required="required">
+		</div>
+		
+		<div>
+			<input type="checkbox" id="remember-me" name="remember-me">
+			<label for="remember-me">Remember me</label>
+		</div>
+
+		<div class="form-row">
+			<input type="submit" value="Login">
+		</div>
+		
+		<p>Don't have an account yet ? <a th:href="@{/register}">Register</a></p>
+	</form>
+</main>
+
+</body>
+</html>

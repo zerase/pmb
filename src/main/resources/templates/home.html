@@ -19,7 +19,7 @@
 			<li style="display:inline;"><a th:href="@{/profile}">Profile</a></li>
 			<li style="display:inline;"><a th:href="@{/contact}">Contact</a></li>
 			<li style="display:inline-block;">
-				<form action="@{/logout}" method="post">
+				<form th:action="@{/perform_logout}" method="post">
 					<input type="submit" value="Log off" />
 				</form>
 			</li>

@@ -23,13 +23,11 @@ public class HomeController {
 	private BankAccountService bankAccountService;
 	
 
-	// TODO: Ajouter Javadoc comment
-	@GetMapping({ "/", "/home" })
+	// TODO: Ajouter Javadoc comment --> Homepage of an authenticated user
+	@GetMapping("/home")
 	public String showHomeView(Model model) {
-		
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		Optional<BankAccount> bank = Optional.ofNullable(user.getBankAccount());
 
@@ -45,10 +43,8 @@ public class HomeController {
 	// TODO: Ajouter Javadoc comment
 	@PostMapping("/addBankAccount")
 	public String addBankAccount(Model model, @RequestParam String iban) {
-		
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 
 		try {
 			bankAccountService.saveBank(user.getEmail(), iban);

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.pmb.demo.model.Connection;
 import com.pmb.demo.model.UserAccount;
@@ -23,23 +25,17 @@ public class UserAccountService {
 	@Autowired
 	private ConnectionRepository connectionRepository;
 	
-	
-	
-	// TODO : Voir si on garde cette méthode après la mise en place de la couche Security
-	/**
-	 * Get a user from database by his id
-	 * @param id of the requested user
-	 * @return a object UserAccount, null otherwise
-	 */
-	/*public UserAccount getUserById(Long id) {
-		Optional<UserAccount> user = userAccountRepository.findById(id);
-		
-		if(user.isPresent()) {
-			return user.get();
-		}
-		return null;
-	}*/
-	
+
+
+	// TODO : Ajouter Javadoc comment
+	// TODO : Need to check further but Security seems OK
+	public Optional<UserAccount> getCurrentConnectedUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		return userAccountRepository.findUserAccountByEmail(email);
+	}
+
+
 	/**
 	 * Get a user from database by his email
 	 * @param email The email of the requested user
@@ -53,7 +49,8 @@ public class UserAccountService {
 		}
 		return null;
 	}
-	
+
+
 	/**
 	 * Get list of connections (friends) of an user
 	 * @param email The email of the requested user
@@ -64,7 +61,8 @@ public class UserAccountService {
 		
 		return user.getFriends().iterator();
 	}
-	
+
+
 	/**
 	 * Add a connection (friend) to an user by his email address
 	 * @param userEmail The email of the requested user
@@ -81,9 +79,8 @@ public class UserAccountService {
 
 		return connectionRepository.save(friendshipToAdd);
 	}
-	
-	
-	
+
+
 	// This method should credit the connection (friend) with the amount of the transaction
 	/**
 	 * Credit the balance of an user
@@ -96,7 +93,8 @@ public class UserAccountService {
 		user.setBalance(userbalance.add(amount));
 		return userAccountRepository.save(user);
 	}
-	
+
+
 	// This method should debit the current user with the amount of the transaction
 	/**
 	 * Debit the balance of an user
@@ -109,13 +107,15 @@ public class UserAccountService {
 		user.setBalance(userbalance.subtract(amount));
 		return userAccountRepository.save(user);
 	}
-	
+
+
 	// TODO : Add a new user to db with a register form
 	/*public UserAccount addNewUser() {
 		return null;
 	}*/
-	
-	// This method should update a user profile
+
+
+	// TODO: Ajouter Javadoc comment --> This method should update a user profile
 	public UserAccount editUser(String firstNameForm,
 								String lastNameForm,
 								String passwordForm,
