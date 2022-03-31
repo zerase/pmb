@@ -60,4 +60,41 @@ public class TransactionService {
 		
 		return succeedTransfer;
 	}
+
+
+	// Should realize a balance transfer between an user and his bank
+	public Transaction doBankTransfer(String email, String operationType, BigDecimal amount) {
+
+		UserAccount senderUser = userAccountService.getUserByEmail(email);
+		UserAccount receiverUser = userAccountService.getUserByEmail(email);
+		
+		// We persist the transaction
+		Transaction bankTransfer = new Transaction();
+		
+		bankTransfer.setSenderId(senderUser);
+		bankTransfer.setReceiverId(receiverUser);
+		bankTransfer.setAmount(amount);
+		
+		if(operationType.equalsIgnoreCase("payment")) {
+			bankTransfer.setCharges(0.00);
+			bankTransfer.setDescription("Add money to my account");
+			bankTransfer.setType(TransactionType.BANK_TO_USER);
+			
+			userAccountService.credit(receiverUser, amount);
+			
+		} else if(operationType.equalsIgnoreCase("withdraw")) {
+			bankTransfer.setCharges(charges);
+			bankTransfer.setDescription("withdraw money from my account");
+			bankTransfer.setType(TransactionType.USER_TO_BANK);
+			
+			// Calculate total amount to debit from sender balance account
+			BigDecimal commission = amount.multiply(new BigDecimal("0.005"));
+			BigDecimal amountWithCommission = commission.add(amount);
+			userAccountService.debit(senderUser, amountWithCommission);
+		}
+		
+		Transaction succeedBankTransfer = transactionRepository.save(bankTransfer);
+		
+		return succeedBankTransfer;
+	}
 }

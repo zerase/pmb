@@ -38,8 +38,8 @@
 <!-- Main content -->
 <main style="width: 800px; margin:0 auto;">
 	
-	<h2>My transactions</h2>
-	<section id="transaction" style="padding:15px; background-color:lightgrey;">
+	<h2>Send money</h2>
+	<section id="transaction-buddy" style="padding:15px; background-color:lightgrey;">
 		<form th:action="@{/transfer}" method="POST">
         	<input type="hidden" name="userAccount" id="user-account">
                  
@@ -61,8 +61,32 @@
 	   <p th:if="${param.errorTransfer}"   style="border:2px solid red;   color:red;">Operation failed</p>
     </section>
     <hr>
+
+
+    <h2>Bank operation</h2>
+    <section id="transaction-bank" style="padding:15px; background-color:lightgrey;">
+		<form method="POST" th:action="@{/transfer/transferBank}">
+            <p>Select an option : 
+	            <input type="radio" name="operationType" value="payment" id="choice1" required>
+	            <label for="choice1">Add money to my account</label>
 	
+	            <input type="radio" name="operationType" value="withdraw" id="choice2">
+	            <label for="choice2">Withdraw money from my account</label>
+	        </p>
+	        <p>
+            	<label for="amount">Amount(€): </label>
+            	<input type="number" min="1" step=".01" name="amount" required>
+            </p>
+            <input type="submit" value="Transfer!!!">
+       </form>
+       <p th:if="${param.successBankTransfer}" style="border:2px solid green; color:green;">Bank operation succeed</p>
+	   <p th:if="${param.errorBankTransfer}"   style="border:2px solid red;   color:red;">Bank operation failed</p>
+    </section>
+    <hr>
+    
+    
 	<section id="transaction-list">
+		<h2>My transactions</h2>
         <table>
         	<tr>
         		<th>Connection</th>

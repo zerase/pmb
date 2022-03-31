@@ -24,7 +24,7 @@ public class TransferController {
 	TransactionService transactionService;
 	
 	// TODO: Ajouter Security
-	// Retourne la page des transactions d'un user (ici John Doe)
+	// TODO: Ajouter Javadoc comment --> Retourne la page des transactions d'un user (ici John Doe)
 	@GetMapping("/transfer")
 	public String showTransferView(Model model) {
 
@@ -39,7 +39,7 @@ public class TransferController {
 	
 	
 	// TODO: Ajouter Security
-	// TODO: Faire un transfert d'argent (payement) à un user (friend)
+	// TODO: Ajouter Javadoc comment --> Faire un transfert d'argent (paiement) à un user (friend)
 	@PostMapping("/transfer")
 	public String doTransferToUser(Model model,
 									@RequestParam String connections,
@@ -55,6 +55,24 @@ public class TransferController {
 			System.out.println(e);
 			return "redirect:/transfer?errorTransfer";
 		}
-		//return "transfer";
+	}
+	
+	
+	// TODO: Ajouter Security
+	// TODO: Ajouter Javadoc comment --> Faire un transfert d'argent de ou sur un user account
+	@PostMapping("/transfer/transferBank")
+	public String doTransferBank(Model model,
+									@RequestParam BigDecimal amount,
+									@RequestParam String operationType) {
+		
+		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		
+		try {
+			transactionService.doBankTransfer(user.getEmail(), operationType, amount);
+			return "redirect:/transfer?successBankTransfer";
+		} catch (Exception e) {
+			System.out.println();
+			return "redirect:/transfer?errorBankTransfer";
+		}
 	}
 }
