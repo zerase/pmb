@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>PMB - Profilepage</title>
+</head>
+<body>
+
+<header>
+	<!-- Navigation / Menu -->
+	<nav>
+		<!-- Logo PMB -->
+		<div style="display:inline-block;"><button>Pay My Buddy</button></div>
+		
+		<!-- Links -->
+		<ul style="display:inline-block; text-align:right;">
+			<li style="display:inline;"><a th:href="@{/home}">Home</a></li>
+			<li style="display:inline;"><a th:href="@{/transfer}">Transfer</a></li>
+			<li style="display:inline;"><a th:href="@{/profile}">Profile</a></li>
+			<li style="display:inline;"><a th:href="@{/contact}">Contact</a></li>
+			<li style="display:inline-block;">
+				<form action="@{/logout}" method="post">
+					<input type="submit" value="Log off" />
+				</form>
+			</li>
+		</ul>
+	</nav>
+	
+	<!-- Fil d'Ariane -->
+	<nav style="background-color:lightgrey; padding:2px;">
+		<p><a th:href="@{/home}">Home</a> / Profile</p>
+	</nav>
+</header>
+
+
+
+<!-- Main content -->
+<main style="width: 800px; margin:0 auto;">
+	<section>
+		
+		<h2>My profile</h2>
+		
+		<div>
+			<form th:action="@{/profile}" method="POST">
+			<p>
+			<label for="firstName">First name : </label>
+			<input type="text" id="firstName" name="firstName" th:value="${firstName}" required>
+			</p>
+		
+			<p>	
+			<label for="lastName">Last name : </label>
+			<input type="text" id="lastName" name="lastName" th:value="${lastName}" required>
+			</p>
+		
+			<p>	
+			<label for="email">Email : </label>
+			<input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" th:value="${email}" required disabled readonly>
+			</p>
+		
+			<p>	
+			<label for="password">Password : </label>
+			<input type="password" id="password" name="password" th:value="${mdp}" required>
+			</p>
+		
+			<p>	
+			<input type="submit" value="Save" />
+			</p>
+			</form>
+		</div>	
+		<p th:if="${param.successUpdateAccount}" style="border:2px solid green; color:green; text-align:center;">Update successfully !</p>
+		<p th:if="${param.errorUpdateAccount}"   style="border:2px solid red;   color:red;   text-align:center;">A problem occurs !</p>
+	</section>
+</main>
+
+</body>
+</html>

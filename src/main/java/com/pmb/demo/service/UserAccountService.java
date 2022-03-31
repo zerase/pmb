@@ -84,7 +84,7 @@ public class UserAccountService {
 	
 	
 	
-	// TODO : This method should credit the connection (friend) with the amount of the transaction
+	// This method should credit the connection (friend) with the amount of the transaction
 	/**
 	 * Credit the balance of an user
 	 * @param user The user to credit
@@ -97,7 +97,7 @@ public class UserAccountService {
 		return userAccountRepository.save(user);
 	}
 	
-	// TODO: This method should debit the current user with the amount of the transaction
+	// This method should debit the current user with the amount of the transaction
 	/**
 	 * Debit the balance of an user
 	 * @param user The user to debit
@@ -115,9 +115,17 @@ public class UserAccountService {
 		return null;
 	}*/
 	
-	// TODO : Update a user profile
-	/*public UserAccount editUser() {
-		return null;
-	}*/
+	// This method should update a user profile
+	public UserAccount editUser(String firstNameForm,
+								String lastNameForm,
+								String passwordForm,
+								UserAccount user) {
+		
+		user.setFirstName(firstNameForm);
+		user.setLastName(lastNameForm);
+		user.setPassword(passwordForm);
+		
+		return userAccountRepository.save(user);
+	}
 	
 }
