@@ -39,6 +39,26 @@
 		<p>Hello <span th:text="${username}">Toto</span></p>
 		<p>Available balance : <span th:text="${userbalance}">575.12</span> EUR</p>
 	</section>
+	<hr>
+	
+	
+	<section th:if="${userbank.isEmpty}">
+		<p>You don't have a bank account yet.</p>
+		<div>
+			<form method="post" th:action="@{/addBankAccount}">
+				<label for="iban">Iban : </label>
+				<input type="text" id="iban" name="iban" required>
+				
+				<input type="submit" value="Add bank account">
+			</form>
+		</div>
+	</section>
+	<p th:if="${param.successAddBank}" style="border:2px solid green; color:green;">Add bank successfully</p>
+	<p th:if="${param.errorAddBank}"   style="border:2px solid red;   color:red;">Add bank failed</p>
+	
+	<section th:unless="${userbank.isEmpty()}">
+		<p>Mon iban : <span th:text="${userbank.get().getIban()}">123</span></p>
+	</section>
 </main>
 
 </body>
