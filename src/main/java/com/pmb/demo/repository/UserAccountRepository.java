@@ -14,4 +14,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long>{
 	
 	UserAccount findAllByEmail(String email); // Pour  trouver l'ensemble des contacts d'un user
 	
+	boolean existsByEmail(String email); // Pour tester si un user avec telle adresse mail existe déjà
+	
 }

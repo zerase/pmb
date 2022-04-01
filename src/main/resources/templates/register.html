@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Pmb - Registerpage</title>
+
+<style>
+body {background-color:#eee; text-align:center;}
+h1{margin:0;}
+.container{background-color:#fff; max-width:500px; margin:0 auto; padding:30px;}
+.form-row{padding:5px 0; display:flex;}
+.form-row label{padding-right:5px;}
+.form-row input{flex:1;}
+.info{color:#0f7aab;}
+.error{color:red;}
+.success{color:green;}
+</style>
+
+</head>
+<body>
+
+<main class="container">
+	<h1>Register</h1>
+	<!-- If an error occurs -->
+	<div class="error" th:if="${param.errorRegister}">Sorry, but the email already exists. Try register with another one.</div>
+		
+	<!-- If register succeeds -->
+	<div class="success" th:if="${param.successRegister}">You have been registered successfully. <a th:href="@{/login}">Back to Login</a> </div>
+	
+	<form th:action="@{/register}" method="post">		
+		<div class="form-row">
+			<label for="firstName">First name : </label>
+			<input type="text" id="firstName" name="firstName" required="required">
+		</div>
+		
+		<div class="form-row">
+			<label for="lastName">Last name : </label>
+			<input type="text" id="lastName" name="lastName" required="required">
+		</div>
+		
+		<div class="form-row">
+			<label for="email">Email : </label>
+			<input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" name="email" required="required">
+		</div>
+
+		<div class="form-row">
+			<label for="password">Password : </label>
+			<input type="password" id="password" name="password" required="required">
+		</div>
+
+		<div class="form-row">
+			<input type="submit" value="Register">
+		</div>
+	</form>
+</main>
+
+</body>
+</html>

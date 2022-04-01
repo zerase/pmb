@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.pmb.demo.model.Connection;
 import com.pmb.demo.model.UserAccount;
@@ -25,7 +26,8 @@ public class UserAccountService {
 	@Autowired
 	private ConnectionRepository connectionRepository;
 	
-
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	// TODO : Ajouter Javadoc comment
 	// TODO : Need to check further but Security seems OK
@@ -109,10 +111,29 @@ public class UserAccountService {
 	}
 
 
-	// TODO : Add a new user to db with a register form
-	/*public UserAccount addNewUser() {
-		return null;
-	}*/
+	// TODO : Ajouter Javadoc comment --> Add a new user to db with a register form
+	public UserAccount addNewUser(String firstNameForm, 
+								  String lastNameForm,
+								  String emailForm,
+								  String passwordForm) {
+
+		UserAccount userToAdd = new UserAccount();
+		userToAdd.setFirstName(firstNameForm);
+		userToAdd.setLastName(lastNameForm);
+		userToAdd.setEmail(emailForm);
+		
+		String encodedPassword = passwordEncoder.encode(passwordForm);
+		userToAdd.setPassword(encodedPassword);
+		
+		userToAdd.setBalance(new BigDecimal(0.00));
+		
+		return userAccountRepository.save(userToAdd);
+	}
+	
+	// TODO : Ajouter Javadoc comment --> To check if an user(email) if already present in db
+	public boolean existsUserByEmail(String email) {
+		return userAccountRepository.existsByEmail(email);
+	}
 
 
 	// TODO: Ajouter Javadoc comment --> This method should update a user profile

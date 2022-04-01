@@ -47,7 +47,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/login").permitAll() // anyone can access to this page...
+				.antMatchers("/login", "/register").permitAll() // anyone can access to these pages...
 				.anyRequest().authenticated() // ... but the other pages require authentication
 				.and()
 			.formLogin() // configuration for login
