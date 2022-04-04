@@ -1,5 +1,7 @@
 package com.pmb.demo.security;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -58,10 +60,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.defaultSuccessUrl("/home", true) // the landing page after a successful login
 				.failureUrl("/login?error") // the landing page after an unsuccessful login
 				.and()
+			.rememberMe() // configuration for remember-me
+				.tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(7)) // overrides the default one of 2 weeks
+				.key("abcdefghijklmnopqrstuvwxyz0123456789") // the key used to hash the content that override the default one (need to be a secure one)
+				.and()
 			.logout() // configuration for logout
 				.logoutUrl("/perform_logout") // the URL that invoke logout
-				.logoutSuccessUrl("/login?logout") // the landing page after a successful logout
-				.deleteCookies("JSESSIONID"); // TODO: Need to check if this should be place before or after .logoutSuccessUrl
+				.clearAuthentication(true)
+				.invalidateHttpSession(true)
+				.deleteCookies("JSESSIONID", "remember-me")
+				.logoutSuccessUrl("/login?logout"); // the landing page after a successful logout
 	}
 
 }
