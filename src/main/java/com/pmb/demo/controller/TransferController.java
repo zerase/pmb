@@ -23,14 +23,18 @@ public class TransferController {
 	@Autowired
 	TransactionService transactionService;
 	
-	// TODO: Ajouter Security
+
 	// TODO: Ajouter Javadoc comment --> Retourne la page des transactions d'un user (ici John Doe)
 	@GetMapping("/transfer")
 	public String showTransferView(Model model) {
 
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		Iterable<Transaction> transactions = transactionService.getTransactionsListOfUser(user);
 
+		model.addAttribute("username", user.getFirstName() + " " +user.getLastName());
+		model.addAttribute("userbalance", user.getBalance());
+		
 		model.addAttribute("u", user);
 		model.addAttribute("usertransactions", transactions);
 		return "transfer" ;
@@ -38,7 +42,6 @@ public class TransferController {
 	}
 	
 	
-	// TODO: Ajouter Security
 	// TODO: Ajouter Javadoc comment --> Faire un transfert d'argent (paiement) à un user (friend)
 	@PostMapping("/transfer")
 	public String doTransferToUser(Model model,
@@ -46,7 +49,8 @@ public class TransferController {
 									@RequestParam BigDecimal amount,
 									@RequestParam String description) {
 		
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		try {
 			transactionService.doTransfer(user.getEmail(), connections, amount, description);
@@ -58,14 +62,14 @@ public class TransferController {
 	}
 	
 	
-	// TODO: Ajouter Security
 	// TODO: Ajouter Javadoc comment --> Faire un transfert d'argent de ou sur un user account
 	@PostMapping("/transfer/transferBank")
 	public String doTransferBank(Model model,
 									@RequestParam BigDecimal amount,
 									@RequestParam String operationType) {
 		
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		try {
 			transactionService.doBankTransfer(user.getEmail(), operationType, amount);

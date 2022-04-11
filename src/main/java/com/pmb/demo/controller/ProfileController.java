@@ -20,9 +20,9 @@ public class ProfileController {
 	// TODO: Ajouter Javadoc comment
 	@GetMapping("/profile")
 	public String showProfileView(Model model) {
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		// Return user information to view
 		model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
@@ -44,9 +44,8 @@ public class ProfileController {
 								@RequestParam String lastName,
 								@RequestParam String password) {
 		
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		try {
 			userAccountService.editUser(firstName, lastName, password, user);

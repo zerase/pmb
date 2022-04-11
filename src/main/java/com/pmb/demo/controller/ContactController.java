@@ -19,32 +19,30 @@ public class ContactController {
 	private UserAccountService userAccountService;
 	
 	
-	// TODO: Ajouter Security
-	// OK :-) Retourne la page contacts contenant la liste d'un user (ici John Doe)
+	// XXX: Retourne la page contacts contenant la liste d'un user
 	@GetMapping("/contact")
 	public String showContactView(Model model) {
-		
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 		
 		Iterator<UserAccount> userfriends = userAccountService.getUserConnectionsByMail(user.getEmail());
 
 		// Return user information to view
+		model.addAttribute("username", user.getFirstName() + " " +user.getLastName());
+		model.addAttribute("userbalance", user.getBalance());
 		model.addAttribute("userconnections", userfriends);
 		
 		return "contact" ;
 	}
 	
 	
-	// TODO: Ajouter Security
-	// OK :-) Formulaire d'ajout d'un nouveau contact à sa liste
+	// XXX: Formulaire d'ajout d'un nouveau contact à sa liste
 	@PostMapping("/contact")
 	public String addNewConnection(Model model, @RequestParam String email) {
 
-		// TODO: Remplacer par vrai authentification par email avec Spring Security
-		// Simule un utilisateur authentifié par son email
-		UserAccount user = userAccountService.getUserByEmail("john@test.com");
+		// Get current authenticated user
+		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
 
 		try {
 			userAccountService.addConnection(user.getEmail(), email);

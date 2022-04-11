@@ -19,7 +19,7 @@
 			<li style="display:inline;"><a th:href="@{/profile}">Profile</a></li>
 			<li style="display:inline;"><a th:href="@{/contact}">Contact</a></li>
 			<li style="display:inline-block;">
-				<form action="@{/logout}" method="post">
+				<form th:action="@{/perform_logout}" method="post">
 					<input type="submit" value="Log off" />
 				</form>
 			</li>
@@ -36,6 +36,13 @@
 
 <!-- Main content -->
 <main style="width: 800px; margin:0 auto;">
+	<section>
+		<h2>My dashboard</h2>
+		<p>Hello <span th:text="${username}">Toto</span></p>
+		<p>Available balance : <span th:text="${userbalance}">575.12</span> EUR</p>
+	</section>
+	<hr>
+
 	<section>
 		
 		<h2>My profile</h2>
