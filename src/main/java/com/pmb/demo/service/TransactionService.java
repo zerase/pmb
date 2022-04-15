@@ -1,6 +1,5 @@
 package com.pmb.demo.service;
 
-
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import com.pmb.demo.constants.TransactionType;
 import com.pmb.demo.model.Transaction;
 import com.pmb.demo.model.UserAccount;
 import com.pmb.demo.repository.TransactionRepository;
-
 
 
 @Service
@@ -26,6 +24,12 @@ public class TransactionService {
 	// Should return a list of transactions realized by the user
 	public Iterable<Transaction> getTransactionsListOfUser(UserAccount sender) {
 		return transactionRepository.findTransactionsBySenderId(sender);
+	}
+	
+	
+	// Should return a list of transactions with specific type realized by the user
+	public Iterable<Transaction> getTransactionsListOfUserWithTransactionType(UserAccount sender, TransactionType transactionType) {
+		return transactionRepository.findAllBySenderIdAndType(sender, transactionType);
 	}
 	
 	
@@ -84,7 +88,7 @@ public class TransactionService {
 			
 		} else if(operationType.equalsIgnoreCase("withdraw")) {
 			bankTransfer.setCharges(charges);
-			bankTransfer.setDescription("withdraw money from my account");
+			bankTransfer.setDescription("Withdraw money from my account");
 			bankTransfer.setType(TransactionType.USER_TO_BANK);
 			
 			// Calculate total amount to debit from sender balance account

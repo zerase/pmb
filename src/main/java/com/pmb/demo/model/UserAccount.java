@@ -1,10 +1,19 @@
 package com.pmb.demo.model;
 
 import java.math.BigDecimal;
-
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 
 @Entity
@@ -42,6 +51,25 @@ public class UserAccount {
 	private Set<UserAccount> friends;
 
 	
+	/* Constructors */
+	public UserAccount() {
+		super();
+	}
+
+	public UserAccount(String email, String password, String firstName, String lastName, BigDecimal balance,
+			BankAccount bankAccount, Set<UserAccount> friends) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.balance = balance;
+		this.bankAccount = bankAccount;
+		this.friends = friends;
+	}
+
+
+
 	/* Getters and setters */
 	
 	public Long getUserId() {

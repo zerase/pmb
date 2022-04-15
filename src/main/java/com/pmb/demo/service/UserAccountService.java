@@ -9,13 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.pmb.demo.model.Connection;
 import com.pmb.demo.model.UserAccount;
 import com.pmb.demo.repository.ConnectionRepository;
 import com.pmb.demo.repository.UserAccountRepository;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserAccountService {
@@ -29,8 +28,11 @@ public class UserAccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	// TODO : Ajouter Javadoc comment
-	// TODO : Need to check further but Security seems OK
+
+	/**
+	 * Get current authenticated user
+	 * @return
+	 */
 	public Optional<UserAccount> getCurrentConnectedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
@@ -111,12 +113,22 @@ public class UserAccountService {
 	}
 
 
-	// TODO : Ajouter Javadoc comment --> Add a new user to db with a register form
+	/**
+	 * Add a new user to database with custom register form
+	 * @param firstNameForm
+	 * @param lastNameForm
+	 * @param emailForm
+	 * @param passwordForm
+	 * @return
+	 * @throws Exception
+	 */
 	public UserAccount addNewUser(String firstNameForm, 
 								  String lastNameForm,
 								  String emailForm,
-								  String passwordForm) {
+								  String passwordForm) throws Exception {
 
+		checkExistingEmail(emailForm);
+		
 		UserAccount userToAdd = new UserAccount();
 		userToAdd.setFirstName(firstNameForm);
 		userToAdd.setLastName(lastNameForm);
@@ -129,24 +141,43 @@ public class UserAccountService {
 		
 		return userAccountRepository.save(userToAdd);
 	}
-	
-	// TODO : Ajouter Javadoc comment --> To check if an user(email) if already present in db
-	public boolean existsUserByEmail(String email) {
+
+
+	/*public boolean existsUserByEmail(String email) {
 		return userAccountRepository.existsByEmail(email);
+	}*/
+	/**
+	 * Check if an user (email) is already present in database
+	 * @param email
+	 * @throws Exception
+	 */
+	private void checkExistingEmail(String email) throws Exception {
+		if(userAccountRepository.existsByEmail(email)) {
+			throw new Exception("The provided email " + email + " is already used");
+		}
 	}
 
 
-	// TODO: Ajouter Javadoc comment --> This method should update a user profile
+	/**
+	 * Update a user profile
+	 * @param firstNameForm
+	 * @param lastNameForm
+	 * @param passwordForm
+	 * @param userToUpdate
+	 * @return
+	 */
 	public UserAccount editUser(String firstNameForm,
 								String lastNameForm,
 								String passwordForm,
-								UserAccount user) {
+								UserAccount userToUpdate) {
 		
-		user.setFirstName(firstNameForm);
-		user.setLastName(lastNameForm);
-		user.setPassword(passwordForm);
+		userToUpdate.setFirstName(firstNameForm);
+		userToUpdate.setLastName(lastNameForm);
 		
-		return userAccountRepository.save(user);
+		String encodedPassword = passwordEncoder.encode(passwordForm);
+		userToUpdate.setPassword(encodedPassword);
+		
+		return userAccountRepository.save(userToUpdate);
 	}
 	
 }
