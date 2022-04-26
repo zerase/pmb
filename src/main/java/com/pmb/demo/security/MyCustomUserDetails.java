@@ -9,16 +9,17 @@ import com.pmb.demo.model.UserAccount;
 
 public class MyCustomUserDetails implements UserDetails {
 
-	UserAccount user;
+	private static final long serialVersionUID = -333718728194444531L;
+	UserAccount userAccount;
 
 	// Constructor
-	public MyCustomUserDetails(UserAccount user) {
-		this.user = user;
+	public MyCustomUserDetails(UserAccount userAccount) {
+		this.userAccount = userAccount;
 	}
 
 	// Getter
 	public UserAccount getUser() {
-		return user;
+		return userAccount;
 	}
 
 
@@ -30,13 +31,13 @@ public class MyCustomUserDetails implements UserDetails {
 	@Override
 	public String getPassword() {
 		// This should be encrypted/hashed
-		return user.getPassword();
+		return userAccount.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
 		// We replace the default "username" by the email
-		return user.getEmail();
+		return userAccount.getEmail();
 	}
 
 	@Override

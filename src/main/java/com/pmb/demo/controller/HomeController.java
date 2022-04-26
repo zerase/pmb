@@ -30,11 +30,11 @@ public class HomeController {
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 
 		// Return user information to view
-		model.addAttribute("username", user.getFirstName() + " " +user.getLastName());
+		model.addAttribute("username", user.getFirstName() + " " + user.getLastName());
 		model.addAttribute("userbalance", user.getBalance());
 		model.addAttribute("userbank", userBank);
 
-		logger.info("The user homepage");
+		logger.info("Load home view with request GET /home");
 		return "home";
 	}
 

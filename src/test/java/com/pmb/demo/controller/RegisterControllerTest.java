@@ -23,15 +23,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.pmb.demo.repository.UserAccountRepository;
+import com.pmb.demo.service.UserAccountService;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class RegisterControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
 	@Autowired
 	private WebApplicationContext context;
+	@Autowired
+	private UserAccountService userAccountService;
+	@Autowired
+	private UserAccountRepository userAccountRepository;
 	
 	
 	@BeforeAll
@@ -49,11 +55,12 @@ class RegisterControllerTest {
 
 	@AfterEach
 	void tearDown() throws Exception {
+		userAccountRepository.deleteAll();
 	}
 
 	@Test
-	@DisplayName("Display Register page")
-	void testShowRegisterView() throws Exception {
+	@DisplayName("Display Register view")
+	void testShowRegisterView_shouldReturnIsOk_whenRequested() throws Exception {
 		mockMvc.perform(get("/register")).andDo(print())
 			.andExpect(view().name("register"))
 			.andExpect(status().isOk())
@@ -61,24 +68,26 @@ class RegisterControllerTest {
 	}
 
 	@Test
-	@DisplayName("Display Register page when user registered successfully")
-	void testShowRegisterView_whenUserSucceedToRegister() throws Exception {
-		mockMvc.perform(post("/register").param("firstNameForm", "Marie")
-										 .param("lastNameForm", "Curie")
-										 .param("emailForm", "marie@test.com")
-										 .param("passwordForm", "test")).andDo(print())
+	@DisplayName("Display Register view when user registered successfully")
+	void testShowRegisterView_shouldDisplaySuccessMessage_whenUserSucceedToRegister() throws Exception {
+		mockMvc.perform(post("/register").param("firstNameForm", "John")
+										 .param("lastNameForm", "Doe")
+										 .param("emailForm", "john@test.com")
+										 .param("passwordForm", "testpwd")).andDo(print())
 			.andExpect(view().name("register"))
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("You have been registered successfully")));
+			.andExpect(content().string(containsString("You've been registered successfully")));
 	}
 	
 	@Test
-	@DisplayName("Display Register page when user failed to register")
-	void testShowRegisterView_whenUserFailedToRegister() throws Exception {
+	@DisplayName("Display Register view when user failed to register")
+	void testShowRegisterView_shouldDisplayErrorMessage_whenUserFailedToRegister() throws Exception {
+		userAccountService.saveNewUserAccount("John", "Doe", "john@test.com", "testpwd");
+		
 		mockMvc.perform(post("/register").param("firstNameForm", "John")
 				 						 .param("lastNameForm", "Ford")
 				 						 .param("emailForm", "john@test.com")
-				 						 .param("passwordForm", "test")).andDo(print())
+				 						 .param("passwordForm", "testpwd")).andDo(print())
 			.andExpect(view().name("register"))
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString("Failed to register")));

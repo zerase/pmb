@@ -12,10 +12,10 @@ public class LoginController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-	@GetMapping("/login")
-	public String showLoginView(Model model, 
-								@RequestParam(required = false) String error, 
-								@RequestParam(required = false) String logout) {
+    @GetMapping("/login")
+    public String showLoginView(@RequestParam(required = false) String error,
+                                @RequestParam(required = false) String logout,
+                                Model model) {
 		if(error != null) {
 			logger.error("The user failed to login");
 			model.addAttribute("error", "msg-error");
@@ -26,7 +26,7 @@ public class LoginController {
 			model.addAttribute("message", "msg-logout");
 		}
 		
-		logger.info("The user is invited to login with his credentials");
+		logger.info("Load login view with request GET /login");
 		return "login";
 	}
 

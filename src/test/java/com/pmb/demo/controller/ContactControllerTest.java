@@ -1,10 +1,12 @@
 package com.pmb.demo.controller;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.pmb.demo.repository.UserAccountRepository;
+import com.pmb.demo.service.UserAccountService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -24,6 +32,12 @@ class ContactControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	@Autowired
+	private WebApplicationContext context;
+	@Autowired
+	private UserAccountService userAccountService;
+	@Autowired
+	private UserAccountRepository userAccountRepository;
 
 
 	@BeforeAll
@@ -36,19 +50,43 @@ class ContactControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+		
+		userAccountService.saveNewUserAccount("John", "Doe", "john@test.com", "testpwd1");
+		userAccountService.saveNewUserAccount("Marie", "Curie", "marie@test.com", "testpwd2");
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
+		userAccountRepository.deleteAll();
 	}
 
+	@DisplayName("Display Contact view with anonymous user")
 	@Test
-	@DisplayName("Test display Contact page")
+	@WithAnonymousUser
+	void testShowContactView_shouldReturnRedirectionToLoginView_whenUserIsAnonymous() throws Exception {
+		mockMvc.perform(get("/contact"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(redirectedUrl("http://localhost/login"));
+	}
+
+	@DisplayName("Display Contact view with authenticated user")
+	@Test
 	@WithMockUser("john@test.com")
-	void testShowContactView() throws Exception {
+	void testShowContactView_shouldReturnIsOk_whenUserIsAuthenticated() throws Exception {
 		mockMvc.perform(get("/contact")).andDo(print())
+			.andExpect(status().isOk());
+	}
+
+	@DisplayName("Display Contact view with data content of authenticated user")
+	@Test
+	@WithMockUser("john@test.com")
+	void testShowContactView_shouldReturnUserData_whenUserIsAuthenticated() throws Exception {
+		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("contact")));
+			.andExpect(view().name("contact"))
+			.andExpect(model().attributeExists("username", "userbalance", "userbank"))
+			.andExpect(model().attribute("username", "John Doe"));
 	}
 
 }

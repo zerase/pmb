@@ -39,13 +39,16 @@ public class ContactController {
 		model.addAttribute("userbalance", user.getBalance());
 		model.addAttribute("userbank", userBank);
 		model.addAttribute("userconnections", userfriends);
-		logger.info("The user is invited to add a connection to his list");
+
+		logger.info("Load contact view with request GET /contact");
 		return "contact" ;
 	}
 
 
 	@PostMapping("/contact")
 	public String addNewConnection(@RequestParam String email, Model model) {
+
+		logger.info("Load contact view with request POST /contact");
 
 		// Get current authenticated user
 		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
@@ -55,7 +58,7 @@ public class ContactController {
 			logger.info("The user add a connection successfully");
 			return "redirect:/contact?successAddConnection";
 		} catch (Exception e) {
-			logger.error("An error occur : " + e.getMessage());
+			logger.error("An error occurred : " + e.getMessage());
 			return "redirect:/contact?errorAddConnection";
 		}
 	}

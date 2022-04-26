@@ -54,7 +54,7 @@ public class ProfileController {
 		model.addAttribute("error", error);
 		model.addAttribute("message", message);
 		
-		logger.info("The user is invited to complete his personal info");
+		logger.info("Load personal-info view with request GET /profile/personal-info");
 		return "personal-info";
 	}
 
@@ -64,6 +64,7 @@ public class ProfileController {
                                             @RequestParam String lastName,
                                             @RequestParam String password,
                                             Model model) {
+		logger.info("Load personal-info view with request POST /profile/personal-info");
 		
 		String error = null;
 		String message = null;
@@ -80,7 +81,7 @@ public class ProfileController {
 		} catch (Exception e) {
 			error = "Failed to update profile : " + e.getMessage();
 			model.addAttribute("error", error);
-			logger.error("An error occur : " + e.getMessage());
+			logger.error("An error occurred : " + e.getMessage());
 		}
 		
 		// Return other informations to view
@@ -113,7 +114,7 @@ public class ProfileController {
 		model.addAttribute("error", error);
 		model.addAttribute("message", message);
 		
-		logger.info("The user access to his bank account info");
+		logger.info("Load bank-info view with request GET /profile/bank-info");
 		return "bank-info";
 	}
 
@@ -121,6 +122,7 @@ public class ProfileController {
 	@PostMapping("/profile/bank-info")
     public String updateProfileBankInfo(@RequestParam String iban,
                                         Model model) {
+		logger.info("Load bank-info view with request POST /profile/bank-info");
 		
 		String error = null;
 		String message = null;
@@ -137,7 +139,7 @@ public class ProfileController {
 		} catch (Exception e) {
 			error = "Failed to add bank info : " + e.getMessage();
 			model.addAttribute("error", error);
-			logger.error("An error occur : " + e.getMessage());
+			logger.error("An error occurred : " + e.getMessage());
 		}
 		
 		// Return other informations to view

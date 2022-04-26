@@ -21,49 +21,49 @@ public class RegisterController {
 	
 	
 	@GetMapping("/register")
-    public String showRegisterView(Model model, 
-                                   @RequestParam(required = false) String error,
-                                   @RequestParam(required = false) String message) {
-
+    public String showRegisterView(@RequestParam(required = false) String error,
+                                   @RequestParam(required = false) String message,
+                                   Model model) {
+		
 		model.addAttribute("error", error);
 		model.addAttribute("message", message);
 
-		logger.info("The user is invited to register");
+		logger.info("Load register view with request GET /register");
 		return "register";
 	}
-	
-	// TODO: Ajouter Javadoc comment
-	@PostMapping("/register")
-	public String postRegister(Model model,
-							   @RequestParam String firstNameForm,
-							   @RequestParam String lastNameForm,
-							   @RequestParam String emailForm,
-							   @RequestParam String passwordForm) {
-		
+
+
+    @PostMapping("/register")
+    public String submitRegisterView(@RequestParam String firstNameForm,
+                                     @RequestParam String lastNameForm,
+                                     @RequestParam String emailForm,
+                                     @RequestParam String passwordForm,
+                                     Model model) {
+
 		String error = null;
 		String message = null;
-		
+
 		try {
-			userAccountService.addNewUser(firstNameForm, lastNameForm, emailForm, passwordForm);
-			
+			userAccountService.saveNewUserAccount(firstNameForm, lastNameForm, emailForm, passwordForm);
+
 			message = "msg-register-success";
-			
+
 			model.addAttribute("message", message);
-			
-			logger.info("The user is registered and is invited to back to login");
-			
+
+			logger.info("Registered {} {} successfully with {}", firstNameForm, lastNameForm, emailForm);
+
 		} catch (Exception e) {
 			error = "Failed to register : " + e.getMessage();
-			
+
 			model.addAttribute("error", error);
 			model.addAttribute("firstName", firstNameForm);
 			model.addAttribute("lastName", lastNameForm);
 			model.addAttribute("email", emailForm);
 			model.addAttribute("password", passwordForm);
 
-			logger.error("An error occur : " + e.getMessage());
+			logger.error(error);
 		}
+		logger.info("Load register view with request POST /register");
 		return "register";
-
 	}
 }

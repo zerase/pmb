@@ -34,8 +34,8 @@ class LoginControllerTest {
 	}
 	
 	@Test
-	@DisplayName("Display Login page")
-	void testShowLoginView() throws Exception {
+	@DisplayName("Display Login view")
+	void testShowLoginView_shouldReturnIsOk_whenRequested() throws Exception {
 		mockMvc.perform(get("/login")).andDo(print())
 			.andExpect(view().name("login"))
 			.andExpect(status().isOk())
@@ -43,17 +43,17 @@ class LoginControllerTest {
 	}
 	
 	@Test
-	@DisplayName("Display Login page when user failed to login")
-	void testShowLoginView_whenUserFailedToLogIn() throws Exception {
+	@DisplayName("Display Login view when user failed to login")
+	void testShowLoginView_shouldDisplayErrorMessage_whenUserFailedToLogIn() throws Exception {
 		mockMvc.perform(get("/login").param("error", "error")).andDo(print())
 			.andExpect(view().name("login"))
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("Bad credentials")));
+			.andExpect(content().string(containsString("Failed to log in")));
 	}
 	
 	@Test
-	@DisplayName("Display Login page when user logged out")
-	void testShowLoginView_whenUserLoggedOut() throws Exception {
+	@DisplayName("Display Login view when user logged out")
+	void testShowLoginView_shouldDisplayLogoutMessage_whenUserLoggedOut() throws Exception {
 		mockMvc.perform(get("/login").param("logout", "logout")).andDo(print())
 			.andExpect(view().name("login"))
 			.andExpect(status().isOk())

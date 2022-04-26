@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pmb.demo.model.Connection;
 import com.pmb.demo.model.UserAccount;
@@ -17,14 +18,13 @@ import com.pmb.demo.repository.ConnectionRepository;
 import com.pmb.demo.repository.UserAccountRepository;
 
 @Service
+@Transactional
 public class UserAccountService {
-
+	
 	@Autowired
 	private UserAccountRepository userAccountRepository;
-	
 	@Autowired
 	private ConnectionRepository connectionRepository;
-	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -114,67 +114,57 @@ public class UserAccountService {
 
 
 	/**
-	 * Add a new user to database with custom register form
-	 * @param firstNameForm
-	 * @param lastNameForm
-	 * @param emailForm
-	 * @param passwordForm
-	 * @return
-	 * @throws Exception
+	 * Save new user in database.
+	 * @param firstName string representing the input first name entered.
+	 * @param lastName  string representing the input last name entered.
+	 * @param email     string representing the input email entered.
+	 * @param password  string representing the input password entered.
+	 * @return the saved user.
+	 * @throws Exception in case the email already exists.
 	 */
-	public UserAccount addNewUser(String firstNameForm, 
-								  String lastNameForm,
-								  String emailForm,
-								  String passwordForm) throws Exception {
+    public UserAccount saveNewUserAccount(String firstName,
+                                          String lastName,
+                                          String email,
+                                          String password) throws Exception {
 
-		checkExistingEmail(emailForm);
-		
-		UserAccount userToAdd = new UserAccount();
-		userToAdd.setFirstName(firstNameForm);
-		userToAdd.setLastName(lastNameForm);
-		userToAdd.setEmail(emailForm);
-		
-		String encodedPassword = passwordEncoder.encode(passwordForm);
-		userToAdd.setPassword(encodedPassword);
-		
-		userToAdd.setBalance(new BigDecimal(0.00));
-		
-		return userAccountRepository.save(userToAdd);
+		checkExistingEmail(email);
+
+		String encodedPassword = passwordEncoder.encode(password);
+		UserAccount userToSave = new UserAccount();
+
+		userToSave.setFirstName(firstName);
+		userToSave.setLastName(lastName);
+		userToSave.setEmail(email);
+		userToSave.setPassword(encodedPassword);
+		userToSave.setBalance(new BigDecimal(0.00));
+
+		return userAccountRepository.save(userToSave);
 	}
 
-
-	/*public boolean existsUserByEmail(String email) {
-		return userAccountRepository.existsByEmail(email);
-	}*/
-	/**
-	 * Check if an user (email) is already present in database
-	 * @param email
-	 * @throws Exception
-	 */
 	private void checkExistingEmail(String email) throws Exception {
 		if(userAccountRepository.existsByEmail(email)) {
-			throw new Exception("The provided email " + email + " is already used");
+			throw new Exception("The provided email " + email + " is already taken");
 		}
 	}
 
 
 	/**
-	 * Update a user profile
-	 * @param firstNameForm
-	 * @param lastNameForm
-	 * @param passwordForm
-	 * @param userToUpdate
-	 * @return
+	 * Update user profile info.
+	 * @param firstName string representing the input first name entered.
+	 * @param lastName  string representing the input last name entered.
+	 * @param password  string representing the input password entered.
+	 * @param userToUpdate UserAccount object to be updated for.
+	 * @return the updated user.
 	 */
-	public UserAccount editUser(String firstNameForm,
-								String lastNameForm,
-								String passwordForm,
+	public UserAccount editUser(String firstName,
+								String lastName,
+								String password,
 								UserAccount userToUpdate) {
-		
-		userToUpdate.setFirstName(firstNameForm);
-		userToUpdate.setLastName(lastNameForm);
-		
-		String encodedPassword = passwordEncoder.encode(passwordForm);
+
+		String encodedPassword = passwordEncoder.encode(password);
+
+		userToUpdate.setFirstName(firstName);
+		userToUpdate.setLastName(lastName);
 		userToUpdate.setPassword(encodedPassword);
 		
 		return userAccountRepository.save(userToUpdate);
