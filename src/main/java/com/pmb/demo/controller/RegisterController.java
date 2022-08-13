@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pmb.demo.exception.MyCustomBusinessException;
 import com.pmb.demo.service.UserAccountService;
 
 @Controller
@@ -52,7 +53,7 @@ public class RegisterController {
 
 			logger.info("Registered {} {} successfully with {}", firstNameForm, lastNameForm, emailForm);
 
-		} catch (Exception e) {
+		} catch (MyCustomBusinessException e) {
 			error = "Failed to register : " + e.getMessage();
 
 			model.addAttribute("error", error);

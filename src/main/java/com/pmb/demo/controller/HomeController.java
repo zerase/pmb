@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.pmb.demo.model.BankAccount;
 import com.pmb.demo.model.UserAccount;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @Controller
 public class HomeController {
@@ -19,14 +19,14 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
-	private UserAccountService userAccountService;
+	private UserAccountServiceImpl userAccountService;
 
 
 	@GetMapping("/home")
 	public String showHomeView(Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 
 		// Return user information to view

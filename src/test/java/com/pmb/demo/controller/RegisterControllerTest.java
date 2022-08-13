@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.pmb.demo.repository.UserAccountRepository;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,7 +35,7 @@ class RegisterControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 	@Autowired
-	private UserAccountService userAccountService;
+	private UserAccountServiceImpl userAccountService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 	
@@ -72,7 +72,7 @@ class RegisterControllerTest {
 	void testShowRegisterView_shouldDisplaySuccessMessage_whenUserSucceedToRegister() throws Exception {
 		mockMvc.perform(post("/register").param("firstNameForm", "John")
 										 .param("lastNameForm", "Doe")
-										 .param("emailForm", "john@test.com")
+										 .param("emailForm", "john.doe@test.com")
 										 .param("passwordForm", "testpwd")).andDo(print())
 			.andExpect(view().name("register"))
 			.andExpect(status().isOk())
@@ -80,16 +80,28 @@ class RegisterControllerTest {
 	}
 	
 	@Test
-	@DisplayName("Display Register view when user failed to register")
-	void testShowRegisterView_shouldDisplayErrorMessage_whenUserFailedToRegister() throws Exception {
-		userAccountService.saveNewUserAccount("John", "Doe", "john@test.com", "testpwd");
+	@DisplayName("Display Register view when user failed to register due to email already taken")
+	void testShowRegisterView_shouldDisplayErrorMessage_whenUserFailedToRegisterDueToEmailAlreadyTaken() throws Exception {
+		userAccountService.saveNewUserAccount("John", "Doe", "john.doe@test.com", "testpwd");
 		
-		mockMvc.perform(post("/register").param("firstNameForm", "John")
-				 						 .param("lastNameForm", "Ford")
-				 						 .param("emailForm", "john@test.com")
-				 						 .param("passwordForm", "testpwd")).andDo(print())
+		mockMvc.perform(post("/register").param("firstNameForm", "Johnny")
+				 						 .param("lastNameForm", "Doe")
+				 						 .param("emailForm", "john.doe@test.com")
+				 						 .param("passwordForm", "testpwd789")).andDo(print())
 			.andExpect(view().name("register"))
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("Failed to register")));
+			.andExpect(content().string(containsString("is already taken")));
+	}
+	
+	@Test
+	@DisplayName("Display Register view when user failed to register due to blank fields")
+	void testShowRegisterView_shouldDisplayErrorMessage_whenUserFailedToRegisterDueToInvalidData() throws Exception {
+		mockMvc.perform(post("/register").param("firstNameForm", "")
+				 						 .param("lastNameForm", "")
+				 						 .param("emailForm", "")
+				 						 .param("passwordForm", "")).andDo(print())
+			.andExpect(view().name("register"))
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("Invalid field value")));
 	}
 }

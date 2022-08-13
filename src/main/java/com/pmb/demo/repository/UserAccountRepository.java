@@ -12,7 +12,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
 	/**
 	 * Retrieves an user by his email.
-	 * @param email should not be null.
+	 * @param email this email should not be null.
 	 * @return the value of the given email, Optional.empty() if not found.
 	 */
 	Optional<UserAccount> findUserAccountByEmail(String email);
@@ -24,6 +24,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 	 * @param email string representing the input email entered.
 	 * @return true if the given email exists, false otherwise.
 	 */
-	boolean existsByEmail(String email);
+	//boolean existsByEmail(String email);
 	
 }

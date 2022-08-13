@@ -1,4 +1,4 @@
-package com.pmb.demo.repository;
+/*package com.pmb.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,3 +9,4 @@ import com.pmb.demo.model.Connection;
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
 }
+*/

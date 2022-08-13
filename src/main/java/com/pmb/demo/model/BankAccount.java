@@ -19,6 +19,22 @@ public class BankAccount {
 	private String iban;
 
 	
+	/* Constructors */
+	
+	public BankAccount() {
+		
+	}
+	
+	public BankAccount(Long bankAccountId, String iban) {
+		this.bankAccountId = bankAccountId;
+		this.iban = iban;
+	}
+
+	public BankAccount(String iban) {
+		this.iban = iban;
+	}
+
+	
 	/* Getters and setters */
 	
 	public Long getBankAccountId() {

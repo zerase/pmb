@@ -17,7 +17,7 @@ import com.pmb.demo.model.BankAccount;
 import com.pmb.demo.model.Transaction;
 import com.pmb.demo.model.UserAccount;
 import com.pmb.demo.service.TransactionService;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @Controller
 public class TransferController {
@@ -25,7 +25,7 @@ public class TransferController {
 	private static final Logger logger = LoggerFactory.getLogger(TransferController.class);
 
 	@Autowired
-	UserAccountService userAccountService;
+	UserAccountServiceImpl userAccountService;
 	
 	@Autowired
 	TransactionService transactionService;
@@ -41,7 +41,7 @@ public class TransferController {
     public String showTransfersWithBuddiesView(Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		Iterable<Transaction> userToUserTransactions = transactionService.getTransactionsListOfUserWithTransactionType(user, TransactionType.USER_TO_USER);
@@ -67,7 +67,7 @@ public class TransferController {
 		logger.info("Load buddy-transfer view with request POST /transfers/buddy-transfer");
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		
 		try {
 			transactionService.doTransfer(user.getEmail(), connections, amount, description);
@@ -84,7 +84,7 @@ public class TransferController {
     public String showTransfersWithBankView(Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 
 		Iterable<Transaction> userToBankTransactions = transactionService.getTransactionsListOfUserWithTransactionType(user, TransactionType.USER_TO_BANK);
@@ -111,7 +111,7 @@ public class TransferController {
     	logger.info("Load bank-transfer view with request POST /transfers/bank-transfer");
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		
 		try {
 			transactionService.doBankTransfer(user.getEmail(), operationType, amount);

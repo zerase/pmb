@@ -1,40 +1,17 @@
 package com.pmb.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.pmb.demo.exception.MyCustomBusinessException;
 import com.pmb.demo.model.BankAccount;
-import com.pmb.demo.model.UserAccount;
-import com.pmb.demo.repository.BankAccountRepository;
-import com.pmb.demo.repository.UserAccountRepository;
 
-@Service
-public class BankAccountService {
+public interface BankAccountService {
 
-	@Autowired
-	BankAccountRepository bankAccountRepository;
-	@Autowired
-	UserAccountRepository userAccountRepository;
-	@Autowired
-	UserAccountService userAccountService;
+	/**
+	 * Save bank account info
+	 * @param email the email of authenticated user
+	 * @param iban  bank info to add
+	 * @return the saved bank account
+	 * @throws MyCustomBusinessException in case of invalid data or unknown user
+	 */
+	public BankAccount saveBankAccountInfo(String email, String iban) throws MyCustomBusinessException;
 	
-	
-	public BankAccount saveBank(String email, String userBankToAdd) {
-		
-		// The bank info we need to save in db
-		BankAccount bankAccountToSaveInDb = new BankAccount();
-		bankAccountToSaveInDb.setIban(userBankToAdd);
-		
-		BankAccount succeedAddBank = bankAccountRepository.save(bankAccountToSaveInDb);
-		
-		// The user related to the bank we want to add
-		UserAccount user = userAccountService.getUserByEmail(email);
-		Long id = user.getUserId();
-		// We add bank account to entity UserAccount
-		UserAccount userToUpdate = userAccountRepository.getById(id);
-		userToUpdate.setBankAccount(bankAccountToSaveInDb);
-		userAccountRepository.save(userToUpdate);
-		
-		return succeedAddBank;
-	}
 }

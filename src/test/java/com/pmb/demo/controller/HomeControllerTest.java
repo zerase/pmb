@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.pmb.demo.repository.UserAccountRepository;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,7 +34,7 @@ class HomeControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 	@Autowired
-	private UserAccountService userAccountService;
+	private UserAccountServiceImpl userAccountService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 	

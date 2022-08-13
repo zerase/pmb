@@ -1,4 +1,4 @@
-package com.pmb.demo.model;
+/*package com.pmb.demo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,7 @@ public class Connection {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "connection_id")
-	private Long ConnectionId;
+	private Long connectionId;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -25,16 +25,31 @@ public class Connection {
 	@ManyToOne
 	@JoinColumn(name = "friend_id")
 	private UserAccount userFriendId;
-
 	
-	/* Getters and setters */
 	
-	public Long getConnectionId() {
-		return ConnectionId;
+	public Connection() {
+		super();
 	}
 
-	public void setConnectionId(Long connectionId) {
-		ConnectionId = connectionId;
+	public Connection(UserAccount userAccountId, UserAccount userFriendId) {
+		super();
+		this.userAccountId = userAccountId;
+		this.userFriendId = userFriendId;
+	}
+
+	public Connection(Long connectionId, UserAccount userAccountId, UserAccount userFriendId) {
+		super();
+		this.connectionId = connectionId;
+		this.userAccountId = userAccountId;
+		this.userFriendId = userFriendId;
+	}
+
+	public Long getConnectionId() {
+		return connectionId;
+	}
+
+	public void setConnectionId(Long id) {
+		connectionId = id;
 	}
 
 	public UserAccount getUserAccountId() {
@@ -52,5 +67,6 @@ public class Connection {
 	public void setUserFriendId(UserAccount userFriendId) {
 		this.userFriendId = userFriendId;
 	}
-	
+
 }
+*/

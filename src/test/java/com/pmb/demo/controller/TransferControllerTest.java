@@ -27,7 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.pmb.demo.repository.TransactionRepository;
 import com.pmb.demo.repository.UserAccountRepository;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,7 +38,7 @@ class TransferControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 	@Autowired
-	private UserAccountService userAccountService;
+	private UserAccountServiceImpl userAccountService;
 	@Autowired
 	private TransactionRepository transactionRepository;
 	@Autowired

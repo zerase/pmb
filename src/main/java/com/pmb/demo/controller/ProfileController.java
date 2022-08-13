@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pmb.demo.exception.MyCustomBusinessException;
 import com.pmb.demo.model.BankAccount;
 import com.pmb.demo.model.UserAccount;
 import com.pmb.demo.service.BankAccountService;
@@ -39,7 +40,7 @@ public class ProfileController {
                                               Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		// Return user information to view
@@ -70,15 +71,15 @@ public class ProfileController {
 		String message = null;
 		
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		try {
-			userAccountService.editUser(firstName, lastName, password, user);
+			userAccountService.editUserAccount(firstName, lastName, password, user);
 			message = "msg-update-success";
 			model.addAttribute("message", message);
 			logger.info("The user profile info is updated");
-		} catch (Exception e) {
+		} catch (MyCustomBusinessException e) {
 			error = "Failed to update profile : " + e.getMessage();
 			model.addAttribute("error", error);
 			logger.error("An error occurred : " + e.getMessage());
@@ -103,7 +104,7 @@ public class ProfileController {
                                           Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		// Return user information to view
@@ -128,15 +129,15 @@ public class ProfileController {
 		String message = null;
 		
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		try {
-			bankAccountService.saveBank(user.getEmail(), iban);
+			bankAccountService.saveBankAccountInfo(user.getEmail(), iban);
 			message = "msg-add-success";
 			model.addAttribute("message", message);
 			logger.info("The user bank info is added");
-		} catch (Exception e) {
+		} catch (MyCustomBusinessException e) {
 			error = "Failed to add bank info : " + e.getMessage();
 			model.addAttribute("error", error);
 			logger.error("An error occurred : " + e.getMessage());

@@ -28,7 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.pmb.demo.repository.BankAccountRepository;
 import com.pmb.demo.repository.UserAccountRepository;
-import com.pmb.demo.service.UserAccountService;
+import com.pmb.demo.service.UserAccountServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,7 +39,7 @@ class ProfileControllerTest {
 	@Autowired
 	private WebApplicationContext context;
 	@Autowired
-	private UserAccountService userAccountService;
+	private UserAccountServiceImpl userAccountService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 	@Autowired
@@ -125,6 +125,15 @@ class ProfileControllerTest {
 		mockMvc.perform(post("/profile/bank-info").param("iban", "123iban")).andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString("Add bank successfully")));
+	}
+	
+	@DisplayName("Display Bank-info view when user failed to save his bank info")
+	@Test
+	@WithMockUser("john@test.com")
+	void testShowBankInfoView_shouldDisplayErrorMessage_whenUserFailedToSaveHisBankInfo() throws Exception {
+		mockMvc.perform(post("/profile/bank-info").param("iban", "")).andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("Invalid data")));
 	}
 
 }

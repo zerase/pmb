@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pmb.demo.exception.MyCustomBusinessException;
 import com.pmb.demo.model.BankAccount;
 import com.pmb.demo.model.UserAccount;
+import com.pmb.demo.service.ContactService;
 import com.pmb.demo.service.UserAccountService;
 
 @Controller
@@ -23,13 +25,15 @@ public class ContactController {
 	
 	@Autowired
 	private UserAccountService userAccountService;
+	@Autowired
+	private ContactService contactService;
 
 
 	@GetMapping("/contact")
 	public String showContactView(Model model) {
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 		Optional<BankAccount> userBank = Optional.ofNullable(user.getBankAccount());
 		
 		Iterator<UserAccount> userfriends = userAccountService.getUserConnectionsByMail(user.getEmail());
@@ -51,13 +55,13 @@ public class ContactController {
 		logger.info("Load contact view with request POST /contact");
 
 		// Get current authenticated user
-		UserAccount user = userAccountService.getCurrentConnectedUser().orElseThrow();
+		UserAccount user = userAccountService.getCurrentAuthenticatedUser().orElseThrow();
 
 		try {
-			userAccountService.addConnection(user.getEmail(), email);
+			contactService.addNewContact(user.getEmail(), email);
 			logger.info("The user add a connection successfully");
 			return "redirect:/contact?successAddConnection";
-		} catch (Exception e) {
+		} catch (MyCustomBusinessException e) {
 			logger.error("An error occurred : " + e.getMessage());
 			return "redirect:/contact?errorAddConnection";
 		}
